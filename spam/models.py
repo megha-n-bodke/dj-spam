@@ -10,16 +10,17 @@ class SpammyPosting(models.Model):
     REVIEW = 20
     CONTENT_REJECTED = 30
     CONTENT_APPROVED = 40
-    STATUS = (
+    STATUS = getattr(settings, "SPAM_STATUSES", [
         (FLAGGED, _('Flagged')),
         (REVIEW, _('Under review')),
         (CONTENT_REJECTED, _('Rejected')),
         (CONTENT_APPROVED, _('Approved')),
-    )
+    ])
+    DEFAULT_STATUS = getattr(settings, "DEFAULT_SPAM_STATUS", FLAGGED)
 
     # Reporter, left null/blank in case anonymous users are allowed to submit
     reporter = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, related_name='reporter')
-    status = models.IntegerField(choices=STATUS, default=FLAGGED)
+    status = models.IntegerField(choices=STATUS, default=DEFAULT_STATUS)
     reviewer = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name='reviewer')
     comment = models.TextField(blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
