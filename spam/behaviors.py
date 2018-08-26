@@ -7,3 +7,4 @@ class Spammable(models.Model):
 
     class Meta:
         abstract = True
+        app_label = 'spam'
